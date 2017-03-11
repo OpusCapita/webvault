@@ -1,3 +1,22 @@
+<?php
+    define("KEY_FILE", '../vault_key');
+    define("DOWNLOAD_TARGET", "../id_rsa");
+    define("FILETYPE", "application/x-pem-file");
+    $sent_token = $_POST["tokenField"];
+    if ($sent_token) {
+        $token = file_get_contents(KEY_FILE, false);
+        $token = rtrim($token);
+        if ($sent_token == $token) {
+            header("Content-Type: " . FILETYPE);
+            header("Content-disposition: attachment; filename=\"id_rsa\"");
+            readfile(DOWNLOAD_TARGET);
+            die();
+        } else {
+            echo "Wrong access token. Try again.";
+            die();
+        }
+    }
+?>
 <!doctype html>
 <html class="no-js" lang="">
     <head>
@@ -76,7 +95,7 @@
                     <fieldset>
                         <label for="tokenField">id_rsa</label>
                         <br/>
-                        <input type="text" placeholder="Please enter access token" id="tokenField">
+                        <input type="text" placeholder="Please enter access token" id="tokenField" name="tokenField">
                         <p>Authentication token can be found in file saved as <strong>vault_token</strong> in
                         <strong>dm</strong> user home
                         directory. It can be accessed only by authorized user.</p>
